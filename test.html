@@ -18,13 +18,14 @@
 		<p> This is pray4someone page </p>
 		{{> messages}}
 		{{> input}}
-
+		{{> leave}}
 	{{/if}}
 
 	{{#if isPray4me}}
   		<p> This is pray4me page </p>
 		{{> messages}}
 		{{> input}}
+		{{> leave}}
   	{{/if}}
 {{/if}}
 
@@ -33,6 +34,10 @@
 <template name="input">
     <input type="text" id="msg" placeholder="Your message goes here..." style="width: 50%; margin-bottom: 0px">
     <input type="button" value="Send message" class="btn btn-primary sendMsg">
+</template>
+
+<template name="leave">
+    <input type="button" value="Leave" class="quit">
 </template>
 
 <template name="message">

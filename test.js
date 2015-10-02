@@ -1,5 +1,7 @@
 Messages = new Meteor.Collection("messages");
 Rooms = new Meteor.Collection("Rooms");
+var id;
+var count=0;
 if (Meteor.isClient) {
   // counter starts at 0
   Accounts.ui.config({
@@ -39,17 +41,20 @@ if (Meteor.isClient) {
       // increment the counter when button is clicked
       Session.set('state', 'pray4me');
 	  console.log(Session.get('state'));
-	  Rooms.insert({roomname: Meteor.user().username, req:1, resp:0 });
-	  Session.set("roomname",Meteor.user().username);
+	  Session.set("roomname",new Date());
+	  Rooms.insert({roomname: Session.get("roomname"), req:1, stat:"Waiting" });
+
 
     },
 	'click .pray4someone': function () {
+		if (Rooms.find({req:1,stat:"Waiting"}).count() == 0)
+	  		return;
 		Session.set('state','pray4someone');
 	  	console.log(Session.get('state'));
-		var id = Rooms.findOne({req:1,resp:0})._id;
+		id = Rooms.findOne({req:1,stat:"Waiting"})._id;
 		var connectroom = Rooms.findOne({_id:id}).roomname;
 		console.log(connectroom);
-		Rooms.update(id, {$set:{resp:1}});
+		Rooms.update(id, {$set:{stat:"Connected"}});
 		Session.set("roomname",connectroom);
 	}
   });
@@ -64,6 +69,20 @@ if (Meteor.isClient) {
       }
     }
   });
+  
+  Template.leave.events({
+	'click .quit': function() {
+    	Messages.insert({user: Meteor.user().username, msg: "User has left chat", ts: new Date(), room: Session.get("roomname")});
+		Session.set('state','welcome');
+		if(Rooms.findOne({roomname:Session.get("roomname")}).stat == "Connected"){
+			Rooms.update(id, {$set:{stat:"Disconnected"}});
+		}
+		else if(Rooms.findOne({roomname:Session.get("roomname")}).stat == "Disconnected"){
+			Rooms.remove(id);
+		}
+
+	}
+  });
 
   _sendMessage = function() {
     var el = document.getElementById("msg");
@@ -77,7 +96,7 @@ if (Meteor.isClient) {
       return Messages.find({room: Session.get("roomname")}, {sort: {ts: 1}});
     },
 	roomname: function() {
-      return Session.get("roomname");
+      return Rooms.findOne({roomname:Session.get("roomname")}).stat;
     }
   });
   
