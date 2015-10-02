@@ -1,0 +1,40 @@
+<head>
+  <title>test</title>
+</head>
+
+<body>
+  <h1>Welcome to Meteor!</h1>
+
+  {{> hello}}
+</body>
+
+<template name="hello">
+{{#if currentUser}}	
+	{{#if isWelcome}}
+  		<button class=pray4me>Pray For Me!</button>
+  		<button class=pray4someone>Pray For Someone!</button>
+	{{/if}}
+	{{#if isPray4someone}}
+		<p> This is pray4someone page </p>
+		{{> message}}
+		{{> input}}
+
+	{{/if}}
+
+	{{#if isPray4me}}
+  		<p> This is pray4me page </p>
+		{{> message}}
+		{{> input}}
+  	{{/if}}
+{{/if}}
+
+</template>
+
+<template name="input">
+    <input type="text" id="msg" placeholder="Your message goes here..." style="width: 50%; margin-bottom: 0px">
+    <input type="button" value="Send message" class="btn btn-primary sendMsg">
+</template>
+
+<template name="message">
+    <p><strong>ajit</strong> <span style="font-size: 0.7em; color: darkgray">timespan</span>: <i>hello</i></p>
+</template>
