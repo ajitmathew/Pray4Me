@@ -1,8 +1,10 @@
 Messages = new Meteor.Collection("messages");
 Rooms = new Meteor.Collection("Rooms");
-
 if (Meteor.isClient) {
   // counter starts at 0
+  Accounts.ui.config({
+	    passwordSignupFields: 'USERNAME_ONLY'
+	  });
   Session.setDefault('state', 'welcome');
 
   Template.hello.helpers({
