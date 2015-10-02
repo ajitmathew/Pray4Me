@@ -39,13 +39,21 @@ if (Meteor.isClient) {
       // increment the counter when button is clicked
       Session.set('state', 'pray4me');
 	  console.log(Session.get('state'));
+	  Rooms.insert({roomname: Meteor.user().username, req:1, resp:0 });
+	  Session.set("roomname",Meteor.user().username);
+
     },
 	'click .pray4someone': function () {
 		Session.set('state','pray4someone');
 	  	console.log(Session.get('state'));
+		var id = Rooms.findOne({req:1,resp:0})._id;
+		var connectroom = Rooms.findOne({_id:id}).roomname;
+		console.log(connectroom);
+		Rooms.update(id, {$set:{resp:1}});
+		Session.set("roomname",connectroom);
 	}
   });
-  
+
   Template.input.events({
     'click .sendMsg': function(e) {
        _sendMessage();
@@ -56,14 +64,25 @@ if (Meteor.isClient) {
       }
     }
   });
-  sendMessage = function() {
-   /* var el = document.getElementById("msg");
+
+  _sendMessage = function() {
+    var el = document.getElementById("msg");
     Messages.insert({user: Meteor.user().username, msg: el.value, ts: new Date(), room: Session.get("roomname")});
     el.value = "";
-    el.focus();*/
+    el.focus();
   };
-}
 
+  Template.messages.helpers({
+    messages: function() {
+      return Messages.find({room: Session.get("roomname")}, {sort: {ts: 1}});
+    },
+	roomname: function() {
+      return Session.get("roomname");
+    }
+  });
+  
+  
+};
 if (Meteor.isServer) {
   Meteor.startup(function () {
     // code to run on server at startup

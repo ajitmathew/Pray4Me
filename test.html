@@ -4,7 +4,7 @@
 
 <body>
   <h1>Welcome to Meteor!</h1>
-  {{> loginButtons}} <br>
+  {{> loginButtons}} <br><br> <br>
   {{> hello}}
 </body>
 
@@ -16,14 +16,14 @@
 	{{/if}}
 	{{#if isPray4someone}}
 		<p> This is pray4someone page </p>
-		{{> message}}
+		{{> messages}}
 		{{> input}}
 
 	{{/if}}
 
 	{{#if isPray4me}}
   		<p> This is pray4me page </p>
-		{{> message}}
+		{{> messages}}
 		{{> input}}
   	{{/if}}
 {{/if}}
@@ -36,5 +36,14 @@
 </template>
 
 <template name="message">
-    <p><strong>ajit</strong> <span style="font-size: 0.7em; color: darkgray">timespan</span>: <i>hello</i></p>
+<p><strong>{{user}}</strong>: <i>{{msg}}</i></p>
+</template>
+
+<template name="messages">
+    <h4>Room: {{roomname}}</h4>
+    <div id="messages" style="background-color: #ffffff; border: 1px solid darkgray; max-height: 200px; overflow: auto">
+        {{#each messages}}
+            {{user}}: {{msg}} <br>
+        {{/each}}
+    </div>
 </template>
