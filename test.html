@@ -11,6 +11,7 @@
 <template name="hello">
 {{#if currentUser}}	
 	{{#if isWelcome}}
+	<p> <strong>People requesting prayer: {{count}} </strong></p>
   		<button class=pray4me>Pray For Me!</button>
   		<button class=pray4someone>Pray For Someone!</button>
 	{{/if}}

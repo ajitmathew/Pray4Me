@@ -1,12 +1,14 @@
 Messages = new Meteor.Collection("messages");
 Rooms = new Meteor.Collection("Rooms");
 var id;
-var count=0;
 if (Meteor.isClient) {
   // counter starts at 0
   Accounts.ui.config({
 	    passwordSignupFields: 'USERNAME_ONLY'
 	  });
+
+	Meteor.subscribe('messages');
+	Meteor.subscribe('Rooms');
   Session.setDefault('state', 'welcome');
 
   Template.hello.helpers({
@@ -33,6 +35,9 @@ if (Meteor.isClient) {
 		  else{
 			  return false;
 		  }
+	  },
+  	  'count' :function(){
+		  return Rooms.find({req:1,stat:"Waiting"}).count();
 	  }
   });
 
@@ -103,6 +108,12 @@ if (Meteor.isClient) {
   
 };
 if (Meteor.isServer) {
+	Meteor.publish('messages',function(){
+		return Messages.find()
+	});
+	Meteor.publish('Rooms',function(){
+		return Rooms.find();
+	});
   Meteor.startup(function () {
     // code to run on server at startup
   });
